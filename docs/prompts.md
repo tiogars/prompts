@@ -25,9 +25,9 @@ Make a "MkDocs" website that is built then published to "GitHub pages" for each 
 **Prompt:**
 
 ```text
-CNAME "my.website.com" is set and point successfully to GitHub pages.
+CNAME "my.website.com" is set and points successfully to GitHub pages.
 
 Setup website deployed to GitHub pages to use this setting.
 ```
 
-**Use Case:** This prompt setup the website deployed to GitHub page to respond to the defined CNAME you have defined before asking to GitHub copilot.
+**Use Case:** This prompt sets up the website deployed to GitHub Pages to respond to the defined CNAME domain you have configured.
