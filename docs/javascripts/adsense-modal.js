@@ -8,11 +8,16 @@
   const MODAL_INTERVAL = 5 * 60 * 1000; // 5 minutes in milliseconds
   const MIN_DISPLAY_TIME = 5 * 1000; // 5 seconds in milliseconds
 
-  let modalDisplayTime = 0;
   let canCloseModal = false;
+  let countdownInterval = null;
 
-  // Create modal HTML
+  // Create modal HTML (only once)
   function createModal() {
+    // Check if modal already exists
+    if (document.getElementById('adsense-modal')) {
+      return;
+    }
+
     const modalHTML = `
       <div id="adsense-modal" class="adsense-modal" style="display: none;">
         <div class="adsense-modal-content">
@@ -33,6 +38,21 @@
     `;
     
     document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    // Set up event listeners once after creating modal
+    const closeBtn = document.getElementById('adsense-close-btn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeModal);
+    }
+
+    const modal = document.getElementById('adsense-modal');
+    if (modal) {
+      modal.addEventListener('click', function(event) {
+        if (event.target === modal && canCloseModal) {
+          closeModal();
+        }
+      });
+    }
   }
 
   // Show modal
@@ -44,8 +64,13 @@
     
     if (!modal) return;
 
+    // Clear any existing countdown interval
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+
     modal.style.display = 'flex';
-    modalDisplayTime = Date.now();
     canCloseModal = false;
     
     // Disable close button initially
@@ -53,22 +78,21 @@
     closeBtn.style.cursor = 'not-allowed';
     timerText.style.display = 'block';
 
+    // Reset countdown display
+    countdown.textContent = '5';
+
     // Countdown timer
     let secondsLeft = 5;
-    const countdownInterval = setInterval(() => {
+    countdownInterval = setInterval(() => {
       secondsLeft--;
       countdown.textContent = secondsLeft;
       
       if (secondsLeft <= 0) {
         clearInterval(countdownInterval);
+        countdownInterval = null;
         enableCloseButton();
       }
     }, 1000);
-
-    // Also enable close button after minimum display time
-    setTimeout(() => {
-      enableCloseButton();
-    }, MIN_DISPLAY_TIME);
   }
 
   // Enable close button
@@ -86,6 +110,12 @@
   function closeModal() {
     if (!canCloseModal) return;
     
+    // Clear countdown interval if still running
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+
     const modal = document.getElementById('adsense-modal');
     if (modal) {
       modal.style.display = 'none';
@@ -96,22 +126,6 @@
   function initAdModal() {
     // Create modal on page load
     createModal();
-
-    // Set up close button handler
-    const closeBtn = document.getElementById('adsense-close-btn');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', closeModal);
-    }
-
-    // Close modal when clicking outside of it
-    const modal = document.getElementById('adsense-modal');
-    if (modal) {
-      modal.addEventListener('click', function(event) {
-        if (event.target === modal && canCloseModal) {
-          closeModal();
-        }
-      });
-    }
 
     // Show modal every 5 minutes
     setInterval(showModal, MODAL_INTERVAL);
