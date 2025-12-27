@@ -51,7 +51,7 @@ body:
       label: Prompt Content
       description: The actual prompt text that will be used with GitHub Copilot
       placeholder: |
-        Make a "MkDocs" website that is built then published to "GitHub pages" for each commit with a GitHub action.
+        Make a "MkDocs" website that is built then published to "GitHub Pages" for each commit with a GitHub action.
       render: text
     validations:
       required: true
