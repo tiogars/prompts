@@ -51,3 +51,8 @@ extra_javascript:
 
 extra_css:
   - stylesheets/adsense-modal.css
+
+extra:
+  analytics:
+    provider: google
+    property: G-R6ND8NFZV1
